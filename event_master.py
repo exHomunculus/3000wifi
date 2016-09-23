@@ -133,7 +133,7 @@ def check():
             end()
     else:
         log("Incorrect firmware?")
-    end()
+        end()
 
 
 def login():
