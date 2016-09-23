@@ -201,6 +201,7 @@ def dump():
             log("Events cleared.")
     else:
         stopped()
+        start()
     run()
 
 
