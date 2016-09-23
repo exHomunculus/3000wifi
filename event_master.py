@@ -89,7 +89,7 @@ def init():
     else:
         f = open(directory + logfile, 'w')
         f.close()
-    log("Starting script--------------------------------------------------")
+    log("Script started ----------------------------------")
 
 
 def wakeup():
@@ -104,6 +104,7 @@ def wakeup():
             log(timestamp(
             ) + " - Seismo not responding. It could be busy, bad battery, or bad comm setup.")
             end()
+            return
         else:
             timeout += 1
             toggleDTR()
