@@ -45,24 +45,29 @@ def toggleDTR():
     time.sleep(3)
 
 
-def wakeup():
-    # toggle DTR and listen for 'ATE0'   exit on successfully finding 'ATE0'
-    ser.close()
-    ser.open()
+def log(string):
+    f = open(directory + logfile, 'a')
+    f.write(timestamp() + " - " + string + '\n')
+    f.close()
+    print(string)
+
+
+def prompt():
+    ser.write('\r')
     a = ser.read(ser.inWaiting())
-    log("Waiting for seismo to acknowledge...")
     timeout = 0
-    while(a.find('ATE0') == -1):
+    while(a.find('>') == -1):
         if(timeout > maxtimeouts):
-            log(timestamp(
-            ) + " - Seismo not responding. It could be busy, bad battery, or bad comm setup.")
-            end()
+            log("Trouble commicating with siesmo.")
+            return 0
         else:
             timeout += 1
-            toggleDTR()
+            log(" Trying to get a prompt " + str(timeout) +
+                " out of " + str(maxtimeouts))
+            time.sleep(10)
+            ser.write('\r')
             a = ser.read(ser.inWaiting())
-    log("OK.")
-    check()
+    return 1
 
 
 def init():
@@ -87,29 +92,24 @@ def init():
     log("Starting script--------------------------------------------------")
 
 
-def log(string):
-    f = open(directory + logfile, 'a')
-    f.write(timestamp() + " - " + string + '\n')
-    f.close()
-    print(string)
-
-
-def prompt():
-    ser.write('\r')
+def wakeup():
+    # toggle DTR and listen for 'ATE0'   exit on successfully finding 'ATE0'
+    ser.close()
+    ser.open()
     a = ser.read(ser.inWaiting())
+    log("Waiting for seismo to acknowledge...")
     timeout = 0
-    while(a.find('>') == -1):
+    while(a.find('ATE0') == -1):
         if(timeout > maxtimeouts):
-            log("Trouble commicating with siesmo.")
-            return 0
+            log(timestamp(
+            ) + " - Seismo not responding. It could be busy, bad battery, or bad comm setup.")
+            end()
         else:
             timeout += 1
-            log(" Trying to get a prompt " + str(timeout) +
-                " out of " + str(maxtimeouts))
-            time.sleep(10)
-            ser.write('\r')
+            toggleDTR()
             a = ser.read(ser.inWaiting())
-    return 1
+    log("OK.")
+    check()
 
 
 def check():
@@ -239,6 +239,7 @@ def start():
         time.sleep(interval)
 
 
+# Actual first code to RUN
 print timestamp(), "Script starting..."
 init()
 start()
