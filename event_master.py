@@ -11,11 +11,11 @@ from datetime import datetime
 
 # globals
 ser = serial.Serial()
-maxtimeouts = 15  # number of times to try getting a response from seismo
-interval = 1800  # number of seconds to wait between data checks/dumps
-running = 0  # is the seismo in scan mode? 0 = no, 1 = yes
-directory = "/home/pi/FTP/"  # directory to download events to
-logfile = "log.txt"  # name of log file
+maxtimeouts = 15                # number of times to try getting a response from seismo
+interval = 1800                 # number of seconds to wait between data checks/dumps
+running = 0                     # is the seismo in scan mode? 0 = no, 1 = yes
+directory = "/home/pi/FTP/"     # directory to download events to
+logfile = "log.txt"             # name of log file
 
 
 try:
@@ -49,7 +49,7 @@ def log(string):
     f = open(directory + logfile, 'a')
     f.write(timestamp() + " - " + string + '\n')
     f.close()
-    print(string)
+    print(timestamp() + " - " + string)
 
 
 def prompt():
@@ -72,7 +72,6 @@ def prompt():
 
 def init():
     # setup com port
-
     # some simple error handling here
     try:
         ser.port = "/dev/ttyUSB0"
